@@ -5,7 +5,7 @@
 - 引擎：Godot 4.7（`4.7.2-stable`），GDScript，纯代码构建 UI
 - 平台：Windows / Android / Web（HTML5）
 - 在线试玩：<https://oi-sz-xe.github.io/student-card-check/>
-- 许可证：MIT（见 [LICENSE](LICENSE)）
+- 许可证：GNU AGPL-3.0（见 [LICENSE](LICENSE)）
 
 ## 目录结构
 
@@ -241,3 +241,15 @@ godot --headless --path . --script res://tests/run_tests.gd
 - `TESTS PASSED 36 / FAILED 0`
 - 截图存于 `docs/shots/`：`intro` `desk` `verdict` `manual` `signatures` `shop` `briefing` `settle` `saveload`
 - 截图命令：`godot --path . -- --shot=docs/shots/desk.png --shot-mode=desk`
+
+## 许可证
+
+本项目以 **GNU Affero General Public License v3.0** 发布，全文见 [LICENSE](LICENSE)。
+
+AGPL-3.0 的关键义务：
+
+- 修改与再分发必须保留同一许可证，并公开对应源代码
+- **通过网络提供服务**（例如把本作部署成网页版供他人访问）时，必须向使用者提供获取完整源代码的方式
+- 分发时必须附带许可证文本与版权声明
+
+如需在闭源或商业场景下使用，需要另行取得授权。
