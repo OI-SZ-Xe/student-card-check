@@ -1,0 +1,42 @@
+[
+  {
+    "name": "深圳实验中学",
+    "principal": "王明",
+    "sig": "wang_ming",
+    "experiment": true,
+    "dean": "周慧",
+    "dean_sig": "dean_sy"
+  },
+  {
+    "name": "深圳中学",
+    "principal": "李华",
+    "sig": "li_hua",
+    "experiment": false,
+    "dean": "吴敏",
+    "dean_sig": "dean_sz"
+  },
+  {
+    "name": "深圳高级中学",
+    "principal": "张丽",
+    "sig": "zhang_li",
+    "experiment": false,
+    "dean": "何静",
+    "dean_sig": "dean_sg"
+  },
+  {
+    "name": "深圳外国语学校",
+    "principal": "陈芳",
+    "sig": "chen_fang",
+    "experiment": false,
+    "dean": "许强",
+    "dean_sig": "dean_wgy"
+  },
+  {
+    "name": "教育局直属中学",
+    "principal": "赵强",
+    "sig": "zhao_qiang",
+    "experiment": false,
+    "dean": "谢岚",
+    "dean_sig": "dean_jyj"
+  }
+]

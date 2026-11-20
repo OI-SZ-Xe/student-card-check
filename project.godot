@@ -1,0 +1,45 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+"ï»¿config_version"=5
+
+[application]
+
+config/name="请出示学生证"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+boot_splash/show_image=false
+config/icon="res://icon_game.png"
+
+[autoload]
+
+Data="*res://scripts/autoload/Data.gd"
+State="*res://scripts/autoload/State.gd"
+SaveManager="*res://scripts/autoload/SaveManager.gd"
+Sfx="*res://scripts/autoload/Sfx.gd"
+Meta="*res://scripts/autoload/Meta.gd"
+Music="*res://scripts/autoload/Music.gd"
+Settings="*res://scripts/autoload/Settings.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1920
+window/size/window_height_override=1080
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.13, 0.14, 0.12, 1)

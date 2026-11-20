@@ -1,0 +1,51 @@
+{
+  "rent": 10,
+  "utilities": 20,
+  "simple_bonus": 20,
+  "fees": {
+    "correct_simple": 10,
+    "correct_normal": 5,
+    "wrong": 10,
+    "arrest": 20,
+    "confiscate_real": 25,
+    "wanted": 100
+  },
+  "docs": [
+    {
+      "key": "student_card",
+      "name": "学生证",
+      "day": 1,
+      "scope": "all"
+    },
+    {
+      "key": "campus_card",
+      "name": "校园卡",
+      "day": 3,
+      "scope": "experiment"
+    },
+    {
+      "key": "temp_pass",
+      "name": "临时通行证",
+      "day": 3,
+      "scope": "external"
+    },
+    {
+      "key": "security_pass",
+      "name": "纪检部准入证",
+      "day": 8,
+      "scope": "external"
+    },
+    {
+      "key": "transfer_letter",
+      "name": "转学介绍信",
+      "day": 15,
+      "scope": "transfer"
+    },
+    {
+      "key": "health_cert",
+      "name": "健康证明",
+      "day": 20,
+      "scope": "all"
+    }
+  ]
+}

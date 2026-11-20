@@ -1,0 +1,20 @@
+﻿# Godot 4
+.godot/
+*.translation
+
+# 导出产物
+build/
+dist/
+*.tmp
+*.pck
+*.exe
+*.apk
+*.idsig
+
+# 本地调试
+err.log
+debug.log
+
+# 系统
+Thumbs.db
+.DS_Store

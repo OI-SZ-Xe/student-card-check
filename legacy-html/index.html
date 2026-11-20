@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>请出示学生证 - 深圳校园模拟器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 初始界面 -->
+    <div id="start-screen">
+        <div class="start-card">
+            <h1>请出示学生证</h1>
+            <p>深圳实验中学 · 纪检部考核</p>
+            <div id="start-buttons">
+                <button id="new-game-btn">新游戏</button>
+                <button id="continue-btn">继续</button>
+            </div>
+            <div style="margin: 15px 0;">
+                <label style="font-size: 14px;">
+                    <input type="checkbox" id="simple-mode-checkbox" checked> 简单模式（每日+20元，每次正确+10元）
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 天赋选择模态框 -->
+    <div id="talent-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>入职特长选择</h2>
+            <p>请选择一项特长，它将伴随你的整个执勤生涯：</p>
+            <div id="talent-options" style="display: flex; flex-direction: column; gap: 15px; margin: 20px 0;">
+                <button id="talent-economic" class="talent-btn">💰 经济头脑<br><span style="font-size:12px;">每日房租水电减半，简单模式额外+10元</span></button>
+                <button id="talent-justice" class="talent-btn">⚖️ 正义感<br><span style="font-size:12px;">正确审核奖励+5元，逮捕伪造者额外+10元</span></button>
+                <button id="talent-insight" class="talent-btn">🔍 洞察力<br><span style="font-size:12px;">首次对比模式不消耗时间，股票涨跌幅波动缩小30%</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="register-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>入职登记</h2>
+            <p>请输入你的姓名（将显示在检查站铭牌上）：</p>
+            <input type="text" id="player-name-input" maxlength="20" style="width: 80%; padding: 8px; margin: 10px 0; font-family: monospace;">
+            <button id="register-confirm">确认</button>
+        </div>
+    </div>
+
+    <!-- 故事翻页动画容器 -->
+    <div id="story-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div id="story-content"></div>
+            <div id="story-nav">
+                <button id="story-prev">上一页</button>
+                <span id="story-page-num">1/3</span>
+                <button id="story-next">下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主游戏界面 -->
+    <div id="game-container" style="display: none;">
+        <!-- 左侧：证件检查区 -->
+        <div id="inspection-area">
+            <div id="current-date-bar" class="compare-field" data-field="currentDate">
+                <span class="label">今天日期</span>
+                <span id="current-date-value" class="value">2026-03-01</span>
+            </div>
+            <div id="student-card">
+                <h2>学生证 / 通行证</h2>
+                <div id="card-content">
+                    <div class="info-row compare-field" data-field="name"><span class="label">姓名</span><span id="name" class="value">——</span></div>
+                    <div class="info-row compare-field" data-field="grade"><span class="label">年级</span><span id="grade" class="value">——</span></div>
+                    <div class="info-row compare-field" data-field="birth"><span class="label">出生日期</span><span id="birth" class="value">——</span></div>
+                    <div class="info-row compare-field" data-field="studentId"><span class="label">学号</span><span id="student-id" class="value">——</span></div>
+                    <div class="info-row compare-field" data-field="expiry"><span class="label">有效期</span><span id="expiry" class="value">——</span></div>
+                    <div class="info-row school-row compare-field" data-field="school"><span class="label">学校</span><span id="school" class="value">——</span></div>
+                    <div id="extra-fields"></div>
+                </div>
+                <div id="card-status"></div>
+            </div>
+
+            <div id="action-buttons">
+                <button id="btn-compare" class="action compare">对比模式</button>
+                <button id="btn-approve" class="action approve">允许进入</button>
+                <button id="btn-reject" class="action reject">拒绝进入</button>
+                <button id="btn-arrest" class="action arrest" style="display:none;">逮捕</button>
+                <button id="btn-confiscate" class="action confiscate" style="display:none;">没收文件</button>
+                <button id="btn-next-student" class="action next" style="display:none;">喊下一位</button>
+            </div>
+
+            <div id="message-area">
+                <div id="message"></div>
+                <div id="visitor-dialogue">等待访客...</div>
+            </div>
+        </div>
+
+        <!-- 右侧：电脑/电话/状态栏 -->
+        <div id="desktop-area">
+            <div id="status-bar">
+                <div>DAY <span id="day">1</span> / 30</div>
+                <div id="date-display">日期: 2026-03-01</div>
+                <div>TIME <span id="time-left">05:00</span></div>
+                <div>CREDITS <span id="money">0</span></div>
+                <div>检察员: <span id="player-name-display">新员工</span></div>
+                <div>
+                    <button id="save-btn" class="small-btn">保存</button>
+                    <button id="load-btn" class="small-btn">读取</button>
+                </div>
+            </div>
+
+            <!-- 股票面板 -->
+            <div id="stock-panel">
+                <div class="computer-header">深圳实验证券交易所网站版</div>
+                <div id="stock-table">
+                    <table id="stock-data">
+                        <thead>
+                            <tr><th>集团</th><th>最新价</th><th>涨跌</th><th>涨跌幅%</th><th>操作</th></tr>
+                        </thead>
+                        <tbody id="stock-tbody"></tbody>
+                    </table>
+                </div>
+                <div id="stock-news"></div>
+                <div id="trade-area">
+                    <h4>交易面板</h4>
+                    <div id="trade-controls">
+                        <select id="stock-select"></select>
+                        <select id="trade-type">
+                            <option value="buy">买入</option>
+                            <option value="sell">卖出</option>
+                        </select>
+                        <select id="leverage-select">
+                            <option value="1">无杠杆 (1x)</option>
+                            <option value="2">2x 杠杆</option>
+                            <option value="3">3x 杠杆</option>
+                            <option value="5">5x 杠杆</option>
+                        </select>
+                        <input type="number" id="trade-price" placeholder="价格" step="0.01">
+                        <input type="number" id="trade-volume" placeholder="数量 (10股/份)" step="1" min="1">
+                        <select id="sell-position-select" style="display: none;">
+                            <option value="">选择持仓</option>
+                        </select>
+                        <button id="trade-submit" class="small-btn">确认交易</button>
+                    </div>
+                    <div id="trade-upgrade" style="margin-top: 8px;">
+                        <button id="upgrade-auto-trade" class="small-btn" style="background:#6f8f6f;">升级一键填写交割单 (30元)</button>
+                    </div>
+                    <div id="holdings"></div>
+                </div>
+            </div>
+
+            <div id="computer">
+                <div class="computer-header">教育局办公系统</div>
+                <div id="browser-area">
+                    <div id="browser-unlock" style="text-align: center; padding: 20px;">
+                        <button id="open-browser-btn" class="action" style="background: #4a6a3a;">打开浏览器</button>
+                    </div>
+                    <div id="browser-content" style="display: none;">
+                        <div id="bookmarks">
+                            <button class="bookmark" data-site="schools">学校信息库</button>
+                            <button class="bookmark" data-site="phone">教育局电话簿</button>
+                            <button class="bookmark" data-site="rules">准入规定</button>
+                            <button class="bookmark" data-site="wanted">协查通报</button>
+                            <button id="mailbox-btn" class="bookmark">📧 收件箱</button>
+                            <button id="achievements-btn" class="bookmark">🏆 成就</button>
+                        </div>
+                        <div id="webview">
+                            <div id="web-content">请点击上方按钮查询信息</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="phone-shortcuts" style="display: none; background: #2a2a1a; border: 1px solid #7a6a4a; padding: 8px;">
+                <h4>快捷电话</h4>
+                <div id="phone-buttons" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            </div>
+
+            <div id="upgrade-panel">
+                <h4>可购买升级</h4>
+                <div id="upgrade-list"></div>
+            </div>
+
+            <div id="confiscated-panel" style="display:none;">
+                <h4>没收物品栏</h4>
+                <div id="confiscated-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 报纸模态框 -->
+    <div id="newspaper-modal" class="modal">
+        <div class="modal-content">
+            <h2>校园日报</h2>
+            <div id="newspaper-content"></div>
+            <button id="close-newspaper">开始今日执勤</button>
+        </div>
+    </div>
+
+    <!-- 前辈的字条模态框 -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2>📜 前辈留下的字条</h2>
+            <div id="note-content" style="text-align: left; font-size: 14px; line-height: 1.5; margin: 15px 0;">
+                <p>新同事，欢迎加入纪检部。</p>
+                <p>第一天你需要拨打纪检部培训电话完成入职培训。</p>
+                <p><strong>培训电话：0755-00000000</strong></p>
+                <p>请使用电脑中的“电话核实”功能手动输入此号码，或点击电脑区上方醒目的“新人培训”按钮。</p>
+                <p style="color: #aa4444;">⚠️ 注意：此号码仅限新人培训使用，培训后失效。</p>
+            </div>
+            <button id="close-note">我知道了</button>
+        </div>
+    </div>
+
+    <!-- 教程模态框 -->
+    <div id="tutorial-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 550px;">
+            <h2>📞 纪检部新人培训</h2>
+            <div id="tutorial-content" style="text-align: left; font-size: 13px; line-height: 1.5; max-height: 400px; overflow-y: auto;"></div>
+            <button id="close-tutorial">培训完成，开始执勤</button>
+        </div>
+    </div>
+
+    <!-- 邮件列表模态框 -->
+    <div id="mailbox-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>收件箱</h3>
+            <div id="mail-list" style="max-height: 300px; overflow-y: auto; text-align: left;"></div>
+            <button id="close-mailbox">关闭</button>
+        </div>
+    </div>
+
+    <!-- 邮件内容模态框 -->
+    <div id="mail-action-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="mail-subject"></h3>
+            <p id="mail-body" style="text-align: left; margin: 10px 0;"></p>
+            <div id="mail-actions" style="display: flex; justify-content: center; gap: 20px;"></div>
+        </div>
+    </div>
+
+    <!-- 成就模态框 -->
+    <div id="achievements-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>🏆 成就</h3>
+            <div id="achievements-list" style="max-height: 300px; overflow-y: auto; text-align: left;"></div>
+            <button id="close-achievements">关闭</button>
+        </div>
+    </div>
+
+    <!-- 结局模态框 -->
+    <div id="ending-modal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <h2 id="ending-title"></h2>
+            <pre id="ending-desc" style="text-align: left; font-family: monospace; white-space: pre-wrap; margin: 20px 0;"></pre>
+            <button id="restart-from-ending">重新开始</button>
+        </div>
+    </div>
+
+    <!-- 电话一键拨打模态框 -->
+    <div id="phone-oneclick-modal" class="modal">
+        <div class="modal-content">
+            <h3>电话核实</h3>
+            <p>正在拨打 <span id="call-number"></span> ...</p>
+            <div id="oneclick-result" style="margin-top: 10px;"></div>
+            <button id="oneclick-close">关闭</button>
+        </div>
+    </div>
+
+    <!-- 电话手动输入模态框 -->
+    <div id="phone-input-modal" class="modal">
+        <div class="modal-content">
+            <h3>电话核实</h3>
+            <p>请输入教育局核实电话号码：</p>
+            <input type="text" id="phone-number-input" placeholder="例如: 0755-12345678" style="width: 80%; padding: 8px; margin: 10px 0; font-family: monospace;">
+            <div>
+                <button id="confirm-phone-btn">确认</button>
+                <button id="cancel-phone-btn">取消</button>
+            </div>
+            <div id="phone-result" style="margin-top: 10px; font-size: 12px;"></div>
+        </div>
+    </div>
+
+    <!-- 事件模态框（用于贿赂等） -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="event-title"></h3>
+            <p id="event-desc"></p>
+            <div id="event-options"></div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
